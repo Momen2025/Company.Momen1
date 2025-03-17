@@ -9,13 +9,14 @@ using System.Threading.Tasks;
 
 namespace Company.Momen1.BLL.Repositories
 {
-    public class DepartmentRepositories : IDepartmentRepository
+    public class IDepartmentRepositories : IDepartmentRepository
     {
         private CompanyDbContext _context; //null
+        //ASK CLR Create Object From CompanyDbContext
         
-        public DepartmentRepositories()
+        public IDepartmentRepositories(CompanyDbContext context)
         {
-            _context = new CompanyDbContext();
+            _context = context;
         }
         public IEnumerable<Department> GetAll()
         {
