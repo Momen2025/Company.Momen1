@@ -6,10 +6,10 @@ namespace Company.Momen1.PL.Controllers
     //MVC Controller 
     public class DepartmentController : Controller
     {
-        private readonly IDepartmentRepositories _departmentRepositories;
+        private readonly DepartmentRepositories _departmentRepositories;
 
         //ASk CLR Create Object from DepartmentRepositories
-        public DepartmentController(IDepartmentRepositories departmentRepositories)
+        public DepartmentController(DepartmentRepositories departmentRepositories)
         {
             _departmentRepositories = departmentRepositories;
         }
