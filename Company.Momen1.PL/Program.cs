@@ -1,3 +1,7 @@
+using Company.Momen1.BLL.Repositories;
+using Company.Momen1.DAL.Data.Contexts;
+using Microsoft.EntityFrameworkCore;
+
 namespace Company.Momen1.PL
 {
     public class Program
@@ -7,8 +11,14 @@ namespace Company.Momen1.PL
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(); //Register Built-in MVC Services
 
+            builder.Services.AddScoped<IDepartmentRepositories,IDepartmentRepositories>(); //Allow DI For DpartmentRepositores
+
+            builder.Services.AddDbContext<CompanyDbContext>(options=>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefultConnection"));
+            }); //Allow Di For CompanyDbContext
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

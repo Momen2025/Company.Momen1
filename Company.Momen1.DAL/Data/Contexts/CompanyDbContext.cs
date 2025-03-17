@@ -9,11 +9,13 @@ using System.Threading.Tasks;
 
 namespace Company.Momen1.DAL.Data.Contexts
 {
+    //CLR
    public class CompanyDbContext : DbContext
     {
-        public CompanyDbContext() :base()
+        public CompanyDbContext(DbContextOptions<CompanyDbContext> options) :base(options)
         {
 
+                
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -22,10 +24,10 @@ namespace Company.Momen1.DAL.Data.Contexts
 
             base.OnModelCreating(modelBuilder);
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server = .; Database = CompanyMomen1; Trusted_Connection = True; TrustServerCertificate = True ");
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Server = .; Database = CompanyMomen1; Trusted_Connection = True; TrustServerCertificate = True ");
+        //}
         public DbSet<Department>  Departments { get; set; }
     }
 }
