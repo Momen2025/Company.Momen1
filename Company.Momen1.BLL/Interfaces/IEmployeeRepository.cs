@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 
 namespace Company.Momen1.BLL.Interfaces
 {
-   public interface IEmployeeRepository
+   public interface IEmployeeRepository :IGenaricRepository<Employee>
     {
-        IEnumerable<Employee> GetAll();
-        Employee? Get(int Id);
+        //Employee? GetByName(string name);
+        //IEnumerable<Employee> GetAll();
+        //Employee? Get(int Id);
 
-        int Add(Employee model);
-        int Update(Employee model);
-        int Delete(Employee model);
+        //int Add(Employee model);
+        //int Update(Employee model);
+        //int Delete(Employee model);
     }
 }
