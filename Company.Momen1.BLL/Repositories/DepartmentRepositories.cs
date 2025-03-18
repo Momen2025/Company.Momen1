@@ -24,7 +24,7 @@ namespace Company.Momen1.BLL.Repositories
         }
         public Department? Get(int Id)
         {
-            return _context.Departments.Find();
+            return _context.Departments.Find(Id);
         }
         public int Add(Department model)
         {
