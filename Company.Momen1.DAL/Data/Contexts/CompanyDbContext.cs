@@ -29,5 +29,6 @@ namespace Company.Momen1.DAL.Data.Contexts
         //    optionsBuilder.UseSqlServer("Server = .; Database = CompanyMomen1; Trusted_Connection = True; TrustServerCertificate = True ");
         //}
         public DbSet<Department>  Departments { get; set; }
+        public DbSet<Employee>  Employees { get; set; }
     }
 }
