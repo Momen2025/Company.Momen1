@@ -1,4 +1,4 @@
-﻿@model Department
+﻿ @model Department
 @{
     ViewData["Title"] = "Details";
 }
@@ -8,7 +8,7 @@
 <br />
 
 
-
+<div> 
     <div class="my-3">
         <label asp-for="Code" class="col-from-label"></label>
         <input asp-for="Code" class=" form-control" readonly />
@@ -28,8 +28,9 @@
     </div>
 
     <div class="my-3">
-       
-        <a asp-action="Edit" class="btn btn-warning">Edit</a>
+
+    <a asp-action="Edit" asp-route-Id="@Model.Id" class="btn btn-warning">Edit</a>
         <a asp-action="Index" class="btn btn-light">Back To List</a>
     </div>
+</div>
 
