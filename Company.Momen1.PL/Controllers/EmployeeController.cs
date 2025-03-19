@@ -62,12 +62,24 @@ namespace Company.Momen1.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int Id,Employee model)
+        public IActionResult Edit([FromRoute] int Id,CreateEmployeeDTO model)
         {
             if(ModelState.IsValid)
             {
-                if (Id !=model.Id) return BadRequest(); 
-                var count = _employeeRepository.Update(model);
+                //if (Id !=model.Id) return BadRequest(); 
+                var employee = new Employee()
+                {
+                    Name = model.Name,
+                    Address = model.Address,
+                    Age = model.Age,
+                    CreateAt = model.CreateAt,
+                    HiringDate = model.HiringDate,
+                    Email = model.Email,
+                    IsActive = model.IsActive,
+                    Phone = model.Phone,
+                    Salary = model.Salary
+                };
+                var count = _employeeRepository.Update(employee );
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
