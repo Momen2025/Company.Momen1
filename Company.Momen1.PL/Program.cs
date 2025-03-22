@@ -2,6 +2,8 @@ using Company.Momen1.BLL.Interfaces;
 using Company.Momen1.BLL.Repositories;
 using Company.Momen1.DAL.Data.Contexts;
 using Company.Momen1.PL.Controllers;
+using Company.Momen1.PL.DTO.Mapping;
+using Company.Momen1.PL.DTO.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Company.Momen1.PL
@@ -21,6 +23,19 @@ namespace Company.Momen1.PL
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefultConnection"));
             }); //Allow Di For CompanyDbContext
+
+            //builder.Services.AddAutoMapper(typeof(EmployeePropfile));
+            builder.Services.AddAutoMapper(M=> M.AddProfile(new EmployeePropfile()));
+
+            //life time 
+            //builder.Services.AddScoped(); //Create object Life Time per requset
+            //builder.Services.AddTransient(); 
+            //builder.Services.AddSignalRCore
+
+            builder.Services.AddScoped<IScopedService, ScopedService>();
+            builder.Services.AddTransient<ITransentService, TransentService>();
+            builder.Services.AddSingleton<ISingletonService, SingleService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

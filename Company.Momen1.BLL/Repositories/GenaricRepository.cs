@@ -1,6 +1,7 @@
 ﻿using Company.Momen1.BLL.Interfaces;
 using Company.Momen1.DAL.Data.Contexts;
 using Company.Momen1.DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,10 +20,19 @@ namespace Company.Momen1.BLL.Repositories
         }
         public IEnumerable<T> GetAll()
         {
+            if (typeof(T) == typeof(Employee))
+            {
+                return (IEnumerable<T>)_context.Employees.Include(E => E.Department).ToList();
+            }
            return _context.Set<T>().ToList();
         }
         public T? Get(int Id)
         {
+            if (typeof(T) == typeof(Employee))
+            {
+                return  _context.Employees.Include(E => E.Department).FirstOrDefault(E=> E.Id == Id ) as T;
+            }
+
             return _context.Set<T>().Find(Id);
 
         }

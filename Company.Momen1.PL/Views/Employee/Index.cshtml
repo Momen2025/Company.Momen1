@@ -1,11 +1,52 @@
 ﻿@model IEnumerable<Employee>
 @{
     ViewData["Title"] = "Index";
+    // ViewData["department"] = departments;
+
+//     string? ViewDataMessage = ViewData["Message"] as string;
+//     string? ViewBagMessage = ViewBag.Message;
+}
+
+@* <div class="m-3 alert alert-danger">
+    <p>@ViewData["Message"]</p>
+</div> *@
+
+@* <div class="m-3 alert alert-danger">
+    <p>@ViewBag.Message</p>
+</div>
+ *@
+
+
+@if (!string.IsNullOrEmpty(TempData["Message"] as string))
+{
+    <div class="m-3 alert alert-info">
+        <p>@TempData["Message"]</p>
+    </div>
 }
 
 <h1>All Employee</h1>
 <br />
 <br />
+
+
+
+
+<form>
+  <div class="container ">
+        <div class="row  justify-content-center d-flex">
+            <div class="col-6">
+                <input id="SearchInput" placeholder="Search By Name" name="SearchInput" class="form-control" />
+            </div>
+            <div class="col-6">
+                <input type="submit" class="btn btn-success" value="Search" />
+            </div>
+      </div>
+  </div>
+
+    <br />
+    <br />
+
+</form>
 <a asp-action="Create" class="btn btn-primary">Create Employee</a>
 
 <br />
@@ -25,6 +66,7 @@
                 <th>IsDeleted</th>
                 <th>@Html.DisplayNameFor(E => E.HiringDate)</th>
                 <th>@Html.DisplayNameFor(E=> E. CreateAt)</th>
+                <th>Departmnet</th>
                 <th>Details</th>
                 <th>Update</th>
                 <th>Delete</th>
@@ -45,7 +87,15 @@
                     <td>@item.IsActive</td>
                     <td>@item.IsDeleted</td>
                     <td>@item.HiringDate</td>
-                    <td>@item.CreateAt</td>
+                    <td>@item.CreateAt</td>             
+                    @if (item.Department is null) 
+                     {
+                      <td>No Department</td>
+                     }else
+                     {
+                         <td>@item.Department.Name</td>
+                     }
+                        
                   <partial name="_BottonPartialView" model="@item.Id" />
                 </tr>
             }
