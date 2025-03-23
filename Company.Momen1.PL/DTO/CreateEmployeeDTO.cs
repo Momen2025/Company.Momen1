@@ -15,9 +15,10 @@ namespace Company.Momen1.PL.DTO
         public string Email { get; set; }
         [RegularExpression(@"[0-9]{1,3}-[a-zA-Z]{5,10}-[a-zA-Z]{4,10}-[a-zA-Z]{5,10}$",ErrorMessage ="Address must Be  like  123-ST-City-Country")]
         public string Address { get; set; }
-        [Phone]
-        public int Phone { get; set; }
+       
+        public string Phone { get; set; }
         [DataType(DataType.Currency)]
+
         public decimal Salary { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
@@ -28,5 +29,8 @@ namespace Company.Momen1.PL.DTO
         public DateTime CreateAt { get; set; }
 
         public int? DepartmentId { get; set; }
+
+        public  string? ImageName { get; set; }
+        public  IFormFile? Image { get; set; }
     }
 }

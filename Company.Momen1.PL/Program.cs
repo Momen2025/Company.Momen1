@@ -1,3 +1,4 @@
+using Company.Momen1.BLL;
 using Company.Momen1.BLL.Interfaces;
 using Company.Momen1.BLL.Repositories;
 using Company.Momen1.DAL.Data.Contexts;
@@ -16,9 +17,11 @@ namespace Company.Momen1.PL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews(); //Register Built-in MVC Services
+            //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepositories>();   //Allow DI For DpartmentRepositores
+            //builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(); //Allow DI For EmployeeRepository
 
-            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepositories>();   //Allow DI For DpartmentRepositores
-            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(); //Allow DI For EmployeeRepository
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             builder.Services.AddDbContext<CompanyDbContext>(options=>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefultConnection"));

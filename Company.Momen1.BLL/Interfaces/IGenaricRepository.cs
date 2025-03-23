@@ -9,11 +9,11 @@ namespace Company.Momen1.BLL.Interfaces
 {
    public interface IGenaricRepository<T> where T :BaseEntity
     {
-        IEnumerable<T> GetAll();
-        T? Get(int Id);
+       Task <IEnumerable<T>> GetAllAsync();
+      Task<T?> GetAsync(int Id);
 
-        int Add(T model);
-        int Update(T model);
-        int Delete(T model);
+        Task  AddASync(T model);
+        void Update(T model);
+        void Delete(T model);
     }
 }
