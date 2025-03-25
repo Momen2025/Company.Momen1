@@ -3,12 +3,14 @@ using Company.Momen1.BLL.Interfaces;
 using Company.Momen1.DAL.Models;
 using Company.Momen1.PL.DTO;
 using Company.Momen1.PL.Helper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Threading.Tasks;
 
 namespace Company.Momen1.PL.Controllers
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

@@ -2,9 +2,11 @@ using Company.Momen1.BLL;
 using Company.Momen1.BLL.Interfaces;
 using Company.Momen1.BLL.Repositories;
 using Company.Momen1.DAL.Data.Contexts;
+using Company.Momen1.DAL.Models;
 using Company.Momen1.PL.Controllers;
 using Company.Momen1.PL.DTO.Mapping;
 using Company.Momen1.PL.DTO.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Company.Momen1.PL
@@ -27,8 +29,7 @@ namespace Company.Momen1.PL
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefultConnection"));
             }); //Allow Di For CompanyDbContext
 
-            //builder.Services.AddAutoMapper(typeof(EmployeePropfile));
-            builder.Services.AddAutoMapper(M=> M.AddProfile(new EmployeePropfile()));
+           
 
             //life time 
             //builder.Services.AddScoped(); //Create object Life Time per requset
@@ -39,6 +40,19 @@ namespace Company.Momen1.PL
             builder.Services.AddTransient<ITransentService, TransentService>();
             builder.Services.AddSingleton<ISingletonService, SingleService>();
 
+            //builder.Services.AddAutoMapper(typeof(EmployeePropfile));
+            builder.Services.AddAutoMapper(M=> M.AddProfile(new EmployeePropfile()));
+
+            builder.Services.AddIdentity<AppUser, IdentityRole>()
+                            .AddEntityFrameworkStores<CompanyDbContext>();
+
+
+            builder.Services.ConfigureApplicationCookie(config =>
+            {
+                config.LoginPath = "/Account/SingIn";
+                
+                
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -53,6 +67,9 @@ namespace Company.Momen1.PL
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",

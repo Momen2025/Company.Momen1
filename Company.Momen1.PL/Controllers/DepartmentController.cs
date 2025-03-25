@@ -2,6 +2,7 @@
 using Company.Momen1.BLL.Repositories;
 using Company.Momen1.DAL.Models;
 using Company.Momen1.PL.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 namespace Company.Momen1.PL.Controllers
 {
     //MVC Controller 
+    [Authorize]
     public class DepartmentController : Controller
     {
         //private readonly IDepartmentRepository _departmentRepositories;
