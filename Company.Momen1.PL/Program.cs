@@ -44,7 +44,8 @@ namespace Company.Momen1.PL
             builder.Services.AddAutoMapper(M=> M.AddProfile(new EmployeePropfile()));
 
             builder.Services.AddIdentity<AppUser, IdentityRole>()
-                            .AddEntityFrameworkStores<CompanyDbContext>();
+                            .AddEntityFrameworkStores<CompanyDbContext>()
+                            .AddDefaultTokenProviders();
 
 
             builder.Services.ConfigureApplicationCookie(config =>

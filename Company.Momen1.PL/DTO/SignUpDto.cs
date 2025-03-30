@@ -18,13 +18,14 @@ namespace Company.Momen1.PL.DTO
         public string  Email { get; set; }
 
         [Required(ErrorMessage = "Password Is Required !")]
-        [DataType(DataType.Password)] //********
+        [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [DataType(DataType.Password)] //********
-        [Required(ErrorMessage = "ConfirmPassword Is Required !")]
-        [Compare(nameof(Password),ErrorMessage ="Confirm Passsword dose not math the password !")]
-        public string  ConfirmPassword { get; set; }
+        [Required(ErrorMessage = "Password Is Required !")]
+        [DataType(DataType.Password)]
+        [Compare(nameof(Password), ErrorMessage = "Conformed Password dose not match the passwprd !")]
+        public string ConfirmPassword { get; set; }
+
 
         [Required(ErrorMessage = "FiestName Is Required !")]
         public bool  IsAgrre { get; set; }

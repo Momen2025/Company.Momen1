@@ -3,7 +3,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>All Deparment</h1>
+<h1>All Department</h1>
 
 <br />
 <br />
@@ -26,15 +26,18 @@
 
             </tr>
         </thead>
-        @foreach(var item in Model)
-        {
-            <tr>
-                <td>@item.Code</td>
-                <td>@item.Name</td>
-                <td>@item.CreateAt</td>
-                <partial name="_BottonPartialView" model="@item.Id" />
-            </tr>
-        }
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Code</td>
+                    <td>@item.Name</td>
+                    <td>@item.CreateAt</td>
+                    <partial name="_BottonPartialView" model="@item.Id.ToString()" />
+                </tr>
+            }
+        </tbody>
+
     </table>
 
 }

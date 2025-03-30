@@ -1,5 +1,6 @@
 ﻿using Company.Momen1.DAL.Models;
 using Company.Momen1.PL.DTO;
+using Company.Momen1.PL.Helper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -76,8 +77,6 @@ namespace Company.Momen1.PL.Controllers
 
         #endregion
 
-
-
         #region SignIn
 
         [HttpGet]
@@ -115,7 +114,6 @@ namespace Company.Momen1.PL.Controllers
         }
         #endregion
 
-
         #region SignOut
         [HttpGet]
         public new async Task<IActionResult> SignOut()
@@ -125,6 +123,92 @@ namespace Company.Momen1.PL.Controllers
         }
 
 
+        #endregion
+
+        #region Foegeet Password
+        [HttpGet]
+        public IActionResult ForgetPAssword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendResetPassordUrl(ForgetPasswordDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                var User = await _userManager.FindByEmailAsync(model.Email);
+                if(User is not null)
+                {
+                    //Gerate Token
+
+                   var token=await _userManager.GeneratePasswordResetTokenAsync(User);
+                    // Create Url 
+
+                    var url=  Url.Action("ResetPassword", "Account", new {email=model.Email,token},Request.Scheme);
+
+                    //Craete Email 
+
+                    var email = new Email()
+                    {
+                        To =model.Email,
+                        Subject="Reset Password ",
+                        Body= url
+                    };
+                    //Send Email 
+                  var flag=  EmailSettings.SenEmail(email);
+                    if (flag)
+                    {
+                        //check Your iputs
+                       return RedirectToAction("ChdeckYourInbox");
+                    }
+
+                }
+            }
+            ModelState.AddModelError("","Ivalid Reset password Opreation ");
+            return View("ForgetPassword",model);
+        }
+
+        [HttpGet]
+        public IActionResult ChdeckYourInbox()
+        {
+            return View();
+        }
+
+
+        #endregion
+
+        #region Reset Password
+
+        [HttpGet]
+        public IActionResult ResetPassword(string email,string token)
+        {
+            TempData["email"] = email;
+            TempData["token"] = token;
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswprdDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                var email = TempData["email"] as string;
+                var token = TempData["token"] as string;
+
+                if (email is null || token is null) return BadRequest("Invalid Opreation");
+               var user=await _userManager.FindByEmailAsync(email);
+                if(user is not null)
+                {
+                  var result=await  _userManager.ResetPasswordAsync(user, token, model.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("signIn");
+                    }
+                }
+                ModelState.AddModelError("", "Invalid reset Opreation");
+            }
+            return View();
+        }
         #endregion
 
 

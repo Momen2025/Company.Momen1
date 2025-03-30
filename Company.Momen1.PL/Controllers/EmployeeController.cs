@@ -54,7 +54,6 @@ namespace Company.Momen1.PL.Controllers
             return View(employees);
         }
 
-
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -87,8 +86,9 @@ namespace Company.Momen1.PL.Controllers
             }
             return View(model);
         }
+
         [HttpGet]
-        public async Task<IActionResult> Details(int? Id)
+        public async Task<IActionResult> Details(int? Id,string viewName="Details")
         {
 
             //var departments = _departmentRepositories.GetAll();
@@ -98,31 +98,26 @@ namespace Company.Momen1.PL.Controllers
 
             if (Id is null) return BadRequest("Invalid ID "); //400
             var employee =await  _unitOfWork.EmployeeRepository.GetAsync(Id.Value);
-            if (employee is null) return NotFound(new { StatusCode = 404, message = $"Employee With Id :{Id} is  not Found" });
+            if (employee is null) return NotFound(new { statusCode = 404, message = $"Employee With Id :{Id} is  not Found" });
 
             var dto = _mapper.Map<CreateEmployeeDTO>(employee);
 
-            return View(dto);
+            return View(viewName,dto);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(int? Id,string viewName= "Edit")
+        public async Task<IActionResult> Edit(int? Id)
         {
 
-
-
-            if (Id is null) return BadRequest("Invalid Id");
-
-            var employee =await _unitOfWork.EmployeeRepository.GetAsync(Id.Value);
             var departmnet = await _unitOfWork.DepartmentRepository.GetAllAsync();
             ViewData["departmnet"] = departmnet;
-            if (employee is null) return NotFound(new { StatusCod = 404, message = $"employee with Id: {Id} was not Fond" });
-            var dto = _mapper.Map<CreateEmployeeDTO>(employee);
 
-            return View( viewName);
+            return await Details(Id,"Edit");
         }
+
         [HttpPost]
-        public async Task<IActionResult> Edit([FromRoute] int Id, CreateEmployeeDTO model, string viewName = "Edit")
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit([FromRoute] int Id, CreateEmployeeDTO model)
         {
             if (ModelState.IsValid)
             {
@@ -149,18 +144,18 @@ namespace Company.Momen1.PL.Controllers
 
             }
         
-            return View(viewName, model);
+            return View(model);
         }
-
 
         [HttpGet]
         public async Task<IActionResult> Delete(int? Id)
         {
-            return await Edit(Id, "Delete");
+            return await Details(Id, "Delete");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete([FromRoute] int Id, Employee model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete([FromRoute] int Id, CreateEmployeeDTO model)
         {
             if (ModelState.IsValid)
             {
