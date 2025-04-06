@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "CheckYourEmail";
+    ViewData["Title"] = "CheckYourPhone";
     Layout = null;
 }
 
@@ -17,18 +17,20 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
-
+            background: linear-gradient(135 deg,#ff36,#ff70 );
+            color: white;
+            font-family: Arial,sans-serif
         }
 
         .container {
             text-align: center;
-            border: 5px solid red;
+            border: 5px solid #ff42;
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             background-color: white;
             position: relative;
+            backdrop-filter: blur(15px);
         }
 
         h1 {
@@ -46,7 +48,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 id="animatedText">Check Your Email</h1>
+        <h1 id="animatedText">Check Your Phone</h1>
     </div>
 
     <script>
@@ -56,7 +58,7 @@
 
             let isLight = true;
             const colorChangeInterval = setInterval(() => {
-                textElement.style.color = isLight ? 'red' : 'lightpink';
+                textElement.style.color = isLight ? '#ff46' : '#ff36';
                 isLight = !isLight;
             }, 500);
 

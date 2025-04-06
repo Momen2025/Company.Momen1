@@ -1,9 +1,11 @@
 ﻿using Company.Momen1.DAL.Models;
+using Company.Momen1.DAL.Sms;
 using Company.Momen1.PL.DTO;
 using Company.Momen1.PL.Helper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Company.Momen1.PL.Controllers
@@ -12,11 +14,15 @@ namespace Company.Momen1.PL.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IMailService _mailService;
+        private readonly ITwilioSettings _twilioSettings;
 
-        public AccountController(UserManager<AppUser> userManager,SignInManager<AppUser> signInManager)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IMailService mailService, ITwilioSettings twilioSettings)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _mailService = mailService;
+            _twilioSettings = twilioSettings;
         }
 
         public UserManager<AppUser> UserManager { get; }
@@ -35,14 +41,14 @@ namespace Company.Momen1.PL.Controllers
         public async Task<IActionResult> SignUp(SignUpDto model)
         {
 
-            if (ModelState.IsValid)//Server Side VAlidation
+            if (!ModelState.IsValid) return BadRequest();     //Server Side Validation
             {
                 var user =await _userManager.FindByNameAsync(model.UserName);
                 if(user is null)
                 {
-                    user=  await _userManager.FindByEmailAsync(model.Email);
-                    if(user is null)
-                    {
+                    //user=  await _userManager.FindByEmailAsync(model.Email);
+                    //if(user is null)
+                    //{
                         //register
                          user = new AppUser()
                         {
@@ -59,20 +65,24 @@ namespace Company.Momen1.PL.Controllers
                         {
                             return RedirectToAction("SignIn");
                         }
-
+                    else
+                    {
                         foreach (var error in result.Errors)
                         {
                             ModelState.AddModelError("", error.Description);
                         }
                     }
 
+                       
+                    //}
+
                 }
 
-                ModelState.AddModelError("", "InVAlid SignUp !!");
+                ModelState.AddModelError("", "Invaild SignUp !!");
 
             }
 
-            return View();
+            return View(model);
         }
 
         #endregion
@@ -86,10 +96,10 @@ namespace Company.Momen1.PL.Controllers
         }
 
         //P@ssW0rd
-        [HttpPost] //Account Logign
+        [HttpPost] //Account Login
         public async Task<IActionResult> SignIn(SignInDto model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return BadRequest();
             {
                var user=await _userManager.FindByEmailAsync(model.Email);
                 if(user is not null)
@@ -127,13 +137,13 @@ namespace Company.Momen1.PL.Controllers
 
         #region Foegeet Password
         [HttpGet]
-        public IActionResult ForgetPAssword()
+        public IActionResult ForgetPassword()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendResetPassordUrl(ForgetPasswordDto model)
+        public async Task<IActionResult> SendResetPasswordUrl(ForgetPasswordDto model)
         {
             if (ModelState.IsValid)
             {
@@ -156,25 +166,67 @@ namespace Company.Momen1.PL.Controllers
                         Body= url
                     };
                     //Send Email 
-                  var flag=  EmailSettings.SenEmail(email);
-                    if (flag)
-                    {
-                        //check Your iputs
-                       return RedirectToAction("ChdeckYourInbox");
-                    }
+                    //var flag=  EmailSettings.SenEmail(email);
+                    //  if (flag)
+                    //  {
+                    //      //check Your iputs
+                    //  }
 
+                    _mailService.SendEmail(email);
+                    return RedirectToAction("CheckYourInbox");
                 }
+                   ModelState.AddModelError("", "Invalid Reset password Operation ");
             }
-            ModelState.AddModelError("","Ivalid Reset password Opreation ");
+               
             return View("ForgetPassword",model);
         }
+        [HttpPost]
+        public async Task<IActionResult> SendResetPasswordSms(ForgetPasswordDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                var User = await _userManager.FindByEmailAsync(model.Email);
+                if (User is not null)
+                {
+                    //Gerate Token
 
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(User);
+                    // Create Url 
+
+                    var url = Url.Action("ResetPassword", "Account", new { email = model.Email, token }, Request.Scheme);
+
+                    //Craete Sms
+
+                    var sms = new Sms()
+                    {
+                        To = User.PhoneNumber,
+                        Body = url
+                    };
+
+                    _twilioSettings.SendSms(sms);
+
+                    return RedirectToAction("CheckYourPhone");
+                }
+                ModelState.AddModelError("", "There Is not account with This Email ");
+            }
+
+            return View("ForgetPassword", model);
+        }
         [HttpGet]
-        public IActionResult ChdeckYourInbox()
+        public IActionResult CheckYourInbox()
         {
             return View();
         }
 
+        [HttpGet]
+        public IActionResult CheckYourPhone()
+        {
+            return View();
+        }
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
 
         #endregion
 
@@ -195,7 +247,7 @@ namespace Company.Momen1.PL.Controllers
                 var email = TempData["email"] as string;
                 var token = TempData["token"] as string;
 
-                if (email is null || token is null) return BadRequest("Invalid Opreation");
+                if (email is null || token is null) return BadRequest("Invalid Operation");
                var user=await _userManager.FindByEmailAsync(email);
                 if(user is not null)
                 {
@@ -205,7 +257,7 @@ namespace Company.Momen1.PL.Controllers
                         return RedirectToAction("signIn");
                     }
                 }
-                ModelState.AddModelError("", "Invalid reset Opreation");
+                ModelState.AddModelError("", "Invalid reset Operation");
             }
             return View();
         }

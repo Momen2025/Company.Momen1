@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Company.Momen1.PL.Controllers
 {
     //MVC Controller 
-    [Authorize]
+    [Authorize(Roles ="admon")]
     public class DepartmentController : Controller
     {
         //private readonly IDepartmentRepository _departmentRepositories;

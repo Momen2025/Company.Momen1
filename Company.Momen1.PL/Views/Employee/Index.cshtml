@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Employee>
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Employee";
     // ViewData["department"] = departments;
 
 //     string? ViewDataMessage = ViewData["Message"] as string;
@@ -31,7 +31,7 @@
 <form>
   <div class="row m-4 ">
         <div class="col-6">
-            <input type="tex" id="SearchInput" name="SearchInput" class="form-control" />
+            <input type="text" id="SearchInput" name="SearchInput" class="form-control" />
         </div>
         <div class="col-6">
             <input type="submit" value="Search" class="btn btn-success" />
@@ -100,3 +100,19 @@ else
 
     </div>
 }
+<script>
+    const SearchBar=$('#SearchInput');
+    const table=$('table');
+    SearchBar.on('Keyup',function(event)){
+        var searchvalue=SearchBar.val();
+        $.ajax({
+            url:'/Employee/Search',
+            type:'Get',
+            data:{SearchInput:searchvalue},
+            success:function(result){table.html(result);},
+            error:function(xhr,status,error){console.log(error);}
+        });
+    });
+
+
+</script>

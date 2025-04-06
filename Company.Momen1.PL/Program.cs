@@ -6,6 +6,8 @@ using Company.Momen1.DAL.Models;
 using Company.Momen1.PL.Controllers;
 using Company.Momen1.PL.DTO.Mapping;
 using Company.Momen1.PL.DTO.Services;
+using Company.Momen1.PL.Helper;
+using Company.Momen1.PL.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,7 +28,7 @@ namespace Company.Momen1.PL
 
             builder.Services.AddDbContext<CompanyDbContext>(options=>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefultConnection"));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             }); //Allow Di For CompanyDbContext
 
            
@@ -43,6 +45,12 @@ namespace Company.Momen1.PL
             //builder.Services.AddAutoMapper(typeof(EmployeePropfile));
             builder.Services.AddAutoMapper(M=> M.AddProfile(new EmployeePropfile()));
 
+            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
+            builder.Services.AddScoped<IMailService, MailService>();
+
+            builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection(nameof(TwilioSettings)));
+            builder.Services.AddScoped<ITwilioSettings, TwilioService>();
+
             builder.Services.AddIdentity<AppUser, IdentityRole>()
                             .AddEntityFrameworkStores<CompanyDbContext>()
                             .AddDefaultTokenProviders();
@@ -50,9 +58,8 @@ namespace Company.Momen1.PL
 
             builder.Services.ConfigureApplicationCookie(config =>
             {
-                config.LoginPath = "/Account/SingIn";
-                
-                
+                config.LoginPath = "/Account/SignIn";
+
             });
             var app = builder.Build();
 

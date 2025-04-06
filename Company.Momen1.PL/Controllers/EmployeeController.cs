@@ -51,7 +51,25 @@ namespace Company.Momen1.PL.Controllers
 
             }
 
-            return View(employees);
+            return View( employees);
+        }
+
+        [HttpGet] 
+        public async Task<IActionResult> Search(string? SearchInput)
+        {
+            IEnumerable<Employee> employees;
+            if (string.IsNullOrEmpty(SearchInput))
+            {
+                employees = await _unitOfWork.EmployeeRepository.GetAllAsync();
+            }
+            else
+            {
+                employees = await _unitOfWork.EmployeeRepository.GetByNameAsync(SearchInput);
+
+
+            }
+
+            return PartialView("EmployeePartialView/EmployeesTablePartialView", employees);
         }
 
         [HttpGet]
