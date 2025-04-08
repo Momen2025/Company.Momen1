@@ -9,7 +9,7 @@
 <div>
     <partial name="EmployeePartialView/_DetailsDeletePartialView" />
     <div class="my-3">
-       <a asp-action="Edit" asp-route-Id="@Model.Id" class=" btn btn-warning">Edit</a>
+        <a asp-action="Edit" asp-route-Id="@ViewBag.EmployeeId" class=" btn btn-warning">Edit</a>
         <a asp-action="Index" class="col-form-light">Back To List</a>     
     </div>
 </div>

@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 namespace Company.Momen1.PL.Controllers
 {
     //MVC Controller 
-    [Authorize(Roles ="admon")]
+    [Authorize]
+    //
     public class DepartmentController : Controller
     {
         //private readonly IDepartmentRepository _departmentRepositories;
@@ -100,7 +101,8 @@ namespace Company.Momen1.PL.Controllers
                 {
                     Id = Id,
                     Name=model.Name,
-                    CreateAt=model.CreateAt
+                    CreateAt=model.CreateAt,
+                    Code=model.Code
                 };       
                 
                 _unitOfWork.DepartmentRepository.Update(department);

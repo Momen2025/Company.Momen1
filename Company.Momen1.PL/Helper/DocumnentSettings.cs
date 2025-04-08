@@ -20,7 +20,7 @@
 
             var filePath = Path.Combine(folderPath,fileName);
 
-            var fileStream = new FileStream(filePath,FileMode.Create);
+            using var fileStream = new FileStream(filePath,FileMode.Create);
 
             file.CopyTo(fileStream);
 

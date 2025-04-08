@@ -9,6 +9,8 @@ namespace Company.Momen1.PL.DTO.Mapping
        public EmployeePropfile()
         {
             CreateMap<CreateEmployeeDTO, Employee>();
+
+            CreateMap<Employee, CreateEmployeeDTO>();
         }
     }
 }
